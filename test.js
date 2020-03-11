@@ -1,6 +1,6 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
+const Express = require('express');
+const app = Express();
+const BodyParser = require('body-parser');
 
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -8,8 +8,8 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use(bodyParser.text({ type: 'text/*' }));
-app.use(bodyParser.json());
+app.use(BodyParser.text({ type: 'text/*' }));
+app.use(BodyParser.json());
 
 var requestCounter = 0;
 
@@ -138,5 +138,5 @@ app.post('/', function (req, res) {
 */
 
 app.listen(9998, function () {
-	console.log('Example app listening on port 9999!')
+	console.log("starting")
 })
