@@ -15,21 +15,29 @@ function sendMessage(room, message) {
 	});
 }
 
-async function longPoll(room) {
+async function longPoll(room, id) {
+	var headers = {
+		auth: "password",
+	}
+	if (id)
+		headers.id = id;
 	var response = await Axios({
 		method: 'GET',
-		headers: {
-			auth: "password",
-			id: 0,
-		},
+		headers: headers,
 		url: `${SERVER}/?room=${room}`,
 	});
 	var messages = response.data;
-	var id = response.headers.id;
-	console.log(id, messages);
+	id = response.headers.id;
+	console.log(messages);
+	return id;
 }
 
 if (process.argv[2])
 	sendMessage("test", process.argv[2]);
-longPoll("test");
+(async function() {
+	var id = undefined;
+	while (1) {
+		id = await longPoll("test", id);
+	}
+})();
 
