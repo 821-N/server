@@ -7,6 +7,7 @@ class Room { // <
 		this.callbacks = [];
 		this.nextId = 0;
 		this.oldest = null; // the oldest message id in the room
+		this.id = name; // any unique identifier
 	}
 
 	// post a message

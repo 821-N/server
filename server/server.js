@@ -13,6 +13,7 @@ class Server {
 		});
 		app.use(BodyParser.text({type: "text/*"}));
 		app.use(BodyParser.json());
+		// this is a list of every user that is currently logged in
 		this.auths = {
 			password: new User({
 				uid: 2,
@@ -28,17 +29,22 @@ class Server {
 			var [user, room] = this.process(req, res);
 			if (!user)
 				return;
+			user.onRequest(room);
+			user.setOnline(true);
+			
 			var id = req.headers.id;
-
+			
 			var dc = () => {
+				user.onClose(room);
 				console.log("client disconnected!");
 			};
 			
 			var callback = (messages, id) => {
 				res.set('id', id);
 				res.json(messages);
-				res.end();
+
 				req.removeListener('close', dc);
+				user.onResponse(room);
 			}
 			req.on('close', dc);
 			callback.id = id;
