@@ -28,16 +28,19 @@ async function longPoll(room, id) {
 	});
 	var messages = response.data;
 	id = response.headers.id;
-	console.log(messages);
-	return id;
+	return [id, messages];
 }
 
 if (process.argv[2])
 	sendMessage("test", process.argv[2]);
 (async function() {
 	var id = undefined;
+	var messages;
 	while (1) {
-		id = await longPoll("test", id);
+		[id, messages] = await longPoll("test", id);
+		for (var message of messages) {
+			console.log(message);
+		}
 	}
 })();
 
