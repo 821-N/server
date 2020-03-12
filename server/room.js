@@ -1,17 +1,74 @@
 const RECENTS = 3;
 
 class Room { // <
-	constructor(name) {
+	constructor(name, owner) {
 		this.name = name;
 		this.messages = {}; // recent messages cache
 		this.callbacks = [];
 		this.nextId = 0;
 		this.oldest = null; // the oldest message id in the room
 		this.id = name; // any unique identifier
+		this.users = {};
+		//this.owner = owner;
 	}
 
+	getUser(user) {
+		var r = this.users[user.id];
+		if (!r) {
+			r = this.users[user.id] = {
+				user: user,
+				connections: 0,
+				online: false,
+			};
+			this.post(user.name + " found the room");
+		}
+		return r;
+	}
+	
+	onUserRequest(user) {
+		var roomUser = this.getUser(user);
+		roomUser.connections++;
+		console.log("client joined: ", roomUser.connections);
+		this.userOnline(user, true);
+		clearTimeout(roomUser.dcTimeout);
+		roomUser.dcTimeout = undefined;
+	}
+	
+	onUserResponse(user) {
+		var roomUser = this.getUser(user);
+		console.log("response sent, dec");
+		roomUser.connections--;
+		roomUser.dcTimeout = setTimeout(()=>{
+			if (!roomUser.connections)
+				this.userOnline(user, false);
+		}, 1000);
+	}
+
+	onUserClose(user) {
+		var roomUser = this.getUser(user);
+		roomUser.connections--;
+		console.log("closed",roomUser.connections);
+		if (roomUser.dcTimeout === undefined && !roomUser.connections)
+			this.userOnline(user, false);
+	}
+	
+	userOnline(user, state) {
+		var roomUser = this.getUser(user);
+		if (roomUser.online != state) {
+			roomUser.online = state;
+			this.post(user.name + " " + (state ? "joined" : "left"));
+		}
+	}
+	
 	// post a message
-	post(message) {
+	post(message, user) {
+		if (user) {
+			var roomUser = this.getUser(user);
+			message = user.name + ": " + message;
+			console.log("userrr");
+		} else {
+			console.log("ff");
+		}
 		// insert new
 		this.messages[this.nextId] = message;
 		if (this.oldest === null)

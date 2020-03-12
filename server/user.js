@@ -1,7 +1,7 @@
 class User {
 	constructor(obj) {
 		// account details
-		this.uid = obj.uid;
+		this.id = obj.name
 		this.name = obj.name;
 		// this should have other fields like password, as well as maybe a bio or something
 		// username color, etc.
@@ -11,47 +11,6 @@ class User {
 		this.numConnections = 0;
 	}
 	
-	// call this when sending a response to the client
-	onResponse(room) {
-		this.numConnections--;
-		this.roomConnections[room.id]--;
-		this.dcTimeout = setTimeout(()=>{
-			if (!this.numConnections)
-				this.setOnline(false);
-		}, 1000);
-	}
-
-	// call this when a user makes a request
-	onRequest(room) {
-		this.numConnections++;
-		this.setOnline(true);
-		clearTimeout(this.dcTimeout);
-		this.dcTimeout = undefined;
-	}
-	// this system will cause a user to go offline if their client
-	// does not make a new request after getting a response
-	// with a certain timeout
-	// if they have a very very slow connection this could trigger accidentally
-	// but it's unlikely
-	// This system is used only rarely.
-	// Most of the time, users will be marked offline when they close the long polling request,
-
-	// call when a user closes their connection before
-	// getting a response
-	onClose(room) {
-		this.numConnections--;
-		if (this.dcTimeout === undefined && !this.numConnections)
-			this.setOnline(false);
-	}
-	
-	// set online status
-	setOnline(state) {
-		if (this.online == state)
-			return;
-		this.online = state;
-		console.log("user "+this+" is now "+(this.online ? "online" : "offline"));
-	}
-
 	toString() {
 		return "[User:"+this.name+"]";
 	}

@@ -29,22 +29,25 @@ class Server {
 			var [user, room] = this.process(req, res);
 			if (!user)
 				return;
-			user.onRequest(room);
-			user.setOnline(true);
+			
+			room.onUserRequest(user);
 			
 			var id = req.headers.id;
-			
+
+			var closed = false;
 			var dc = () => {
-				user.onClose(room);
-				console.log("client disconnected!");
+				closed = true;
+				room.onUserClose(user);
 			};
 			
 			var callback = (messages, id) => {
+				if (closed)
+					return;
 				res.set('id', id);
 				res.json(messages);
-
+				
 				req.removeListener('close', dc);
-				user.onResponse(room);
+				room.onUserResponse(user);
 			}
 			req.on('close', dc);
 			callback.id = id;
@@ -62,8 +65,9 @@ class Server {
 				return;
 			}
 			res.end();
-			room.post(message);
+			room.post(message, user);
 		});
+
 	}
 
 	start() {
@@ -118,6 +122,11 @@ class Server {
 			res.send(msg);
 			return [null, null];
 		}
+		/*if (!room.users[user.id]) {
+			res.status(403);
+			res.send("YOu don't have permission to access this room");
+			return [null, null];
+		}*/
 		return [user, room];
 	}
 }
