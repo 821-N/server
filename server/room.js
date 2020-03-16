@@ -1,7 +1,7 @@
-const RECENTS = 3;
+const RECENTS = 30;
 
 class Room { // <
-	constructor(name, owner) {
+	constructor(name, data) {
 		this.name = name;
 		this.messages = {}; // recent messages cache
 		this.callbacks = [];
@@ -9,18 +9,37 @@ class Room { // <
 		this.oldest = null; // the oldest message id in the room
 		this.id = name; // any unique identifier
 		this.users = {};
+		if (data) {
+			for (var message of data.messages)
+				this.addMessage(message);
+		}
 		//this.owner = owner;
 	}
 
+	logoutUser(user) {
+		var roomUser = this.getUser(user);
+		// end all requests from that user
+		this.callbacks = this.callbacks.filter(callback => {
+			if (callback.user == user) {
+				this.tryRespond(callback);
+				return false;
+			}
+			return true;
+		});
+		// just in case
+		roomUser.connections = 0;
+		this.userOnline(user, false);
+	}
+	
 	getUser(user) {
-		var r = this.users[user.id];
+		var r = this.users[user];
 		if (!r) {
-			r = this.users[user.id] = {
+			r = this.users[user] = {
 				user: user,
 				connections: 0,
 				online: false,
 			};
-			this.post(user.name + " found the room");
+			this.post("User "+user+" joined room for the first time");
 		}
 		return r;
 	}
@@ -28,7 +47,7 @@ class Room { // <
 	onUserRequest(user) {
 		var roomUser = this.getUser(user);
 		roomUser.connections++;
-		console.log("client joined: ", roomUser.connections);
+		this.log("User "+user+" requested ("+roomUser.connections+")");
 		this.userOnline(user, true);
 		clearTimeout(roomUser.dcTimeout);
 		roomUser.dcTimeout = undefined;
@@ -36,27 +55,31 @@ class Room { // <
 	
 	onUserResponse(user) {
 		var roomUser = this.getUser(user);
-		console.log("response sent, dec");
 		roomUser.connections--;
+		this.log("Response sent to user "+user+" ("+roomUser.connections+")");
 		roomUser.dcTimeout = setTimeout(()=>{
 			if (!roomUser.connections)
 				this.userOnline(user, false);
 		}, 1000);
 	}
 
-	onUserClose(user) {
-		var roomUser = this.getUser(user);
+	onConnectionClose(callback) {
+		this.callbacks = this.callbacks.filter(cb => {
+			cb !== callback;
+		});
+		var roomUser = this.getUser(callback.user);
 		roomUser.connections--;
-		console.log("closed",roomUser.connections);
+		this.log(" User "+callback.user+" closed connection ("+roomUser.connections+")");
 		if (roomUser.dcTimeout === undefined && !roomUser.connections)
-			this.userOnline(user, false);
+			this.userOnline(callback.user, false);
 	}
-	
+
+	// set the online status of a user
 	userOnline(user, state) {
 		var roomUser = this.getUser(user);
 		if (roomUser.online != state) {
 			roomUser.online = state;
-			this.post(user.name + " " + (state ? "joined" : "left"));
+			this.post(user + " " + (state ? "joined" : "left"));
 		}
 	}
 	
@@ -64,11 +87,18 @@ class Room { // <
 	post(message, user) {
 		if (user) {
 			var roomUser = this.getUser(user);
-			message = user.name + ": " + message;
-			console.log("userrr");
-		} else {
-			console.log("ff");
+			message = user + ": " + message;
 		}
+		this.addMessage(message);
+		this.log("Message: "+message);
+		// send message to clients
+		this.callbacks = this.callbacks.filter(callback => {
+			return !this.tryRespond(callback);
+		})
+	}
+
+	//add message to internal list;
+	addMessage(message) {
 		// insert new
 		this.messages[this.nextId] = message;
 		if (this.oldest === null)
@@ -80,19 +110,18 @@ class Room { // <
 			delete this.messages[this.nextId-RECENTS-1];
 			this.oldest = this.nextId-RECENTS;
 		}
-		
-		console.log("got message: "+message+" in room "+this);
-		// send message to clients
-		this.callbacks = this.callbacks.filter(callback => {
-			return !this.tryRespond(callback);
-		})
+	}
+	
+	log(message) {
+		console.log("["+this.name+"] "+message);
 	}
 	
 	tryRespond(callback) {
 		var messages = this.fromId(callback.id);
 		if (messages) {
-			console.log("sending to client");
+			this.log("Sending to client");
 			callback(messages, this.nextId);
+			this.onUserResponse(callback.user);
 			return true;
 		} else {
 			return false;
@@ -102,7 +131,9 @@ class Room { // <
 	// add a client request callback
 	// as soon as there are messages with ids >= callback.id,
 	// it will call callback(newMessages, nextId);
-	addResponse(callback) {
+	addResponse(callback, user) {
+		callback.user = user;
+		this.onUserRequest(user);
 		if (!this.tryRespond(callback)) {
 			this.callbacks.push(callback);
 		}
@@ -126,6 +157,13 @@ class Room { // <
 		
 	toString() {
 		return "[Room:"+this.name+"]";
+	}
+
+	save() {
+		return {
+			messages: this.fromId(),
+			//users: 
+		};
 	}
 }
 
