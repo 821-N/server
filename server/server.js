@@ -123,9 +123,10 @@ class Server {
 	}
 	
 	start() {
-		this.app.listen(this.port, () => {
+		var server = this.app.listen(this.port, () => {
 			console.log("Starting server on port: "+this.port);
 		})
+		server.timeout = 0;
 	}
 	
 	getRequestUser(req) {

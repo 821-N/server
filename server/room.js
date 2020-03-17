@@ -60,7 +60,7 @@ class Room { // <
 		roomUser.dcTimeout = setTimeout(()=>{
 			if (!roomUser.connections)
 				this.userOnline(user, false);
-		}, 1000);
+		}, 5000); // if user doesn't make a new request within 5 seconds
 	}
 
 	onConnectionClose(callback) {
