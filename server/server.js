@@ -102,8 +102,8 @@ class Server {
 			delete this.utoa[username];
 			delete this.atou[auth];
 			
-			for (var room of this.rooms) {
-				room.logoutUser(username);
+			for (var room in this.rooms) {
+				this.rooms[room].logoutUser(username);
 			}
 		});
 
