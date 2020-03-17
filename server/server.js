@@ -244,3 +244,4 @@ class Server {
 
 module.exports = Server;
 
+// bug: if 2 clients for a user join, then one disconnects, the other will stop recieving data
