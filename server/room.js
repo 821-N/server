@@ -64,9 +64,9 @@ class Room { // <
 	}
 
 	onConnectionClose(callback) {
-		this.callbacks = this.callbacks.filter(cb => {
+		/*this.callbacks = this.callbacks.filter(cb => {
 			cb !== callback;
-		});
+		});*/
 		var roomUser = this.getUser(callback.user);
 		roomUser.connections--;
 		this.log(" User "+callback.user+" closed connection ("+roomUser.connections+")");
