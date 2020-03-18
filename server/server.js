@@ -93,17 +93,18 @@ class Server {
 		//logout
 		app.get('/logout', (req, res) => {
 			console.log("user logging out");
-			var auth;
-			var [username, password] = this.np(req, res, false);
-			if (username === null)
-				return;
-			var auth = this.getCreateUserAuth(username);
+			var [user, code, msg] = this.getRequestUser(req);
+			if (code) {
+				res.status(code);
+				res.send(msg);
+				return [null, null];
+			}
+			var auth=this.utoa[user]
 			delete this.accounts[auth];
-			delete this.utoa[username];
+			delete this.utoa[user];
 			delete this.atou[auth];
-			
 			for (var room in this.rooms) {
-				this.rooms[room].logoutUser(username);
+				this.rooms[room].logoutUser(user);
 			}
 		});
 
