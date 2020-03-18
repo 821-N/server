@@ -91,7 +91,12 @@ class Room { // <
 	// post a message
 	post(message, user) {
 		if (user) {
+			if (!this.users[user]) {
+				return false;
+			}
 			var roomUser = this.getUser(user);
+			if (!roomUser.online)
+				return false;
 			message = user + ": " + message;
 		}
 		this.addMessage(message);
@@ -100,6 +105,7 @@ class Room { // <
 		this.callbacks = this.callbacks.filter(callback => {
 			return !this.tryRespond(callback);
 		})
+		return true;
 	}
 
 	//add message to internal list;

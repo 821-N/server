@@ -65,8 +65,12 @@ class Server {
 				res.status(404).send("Missing message");
 				return;
 			}
+			
+			if (!room.post(message, user)){
+				res.status(400);
+				res.send("can't post in a room that you're not in!");
+			}
 			res.end();
-			room.post(message, user);
 		});
 
 		// register an account
