@@ -12,6 +12,8 @@ class Room { // <
 		if (data) {
 			for (var message of data.messages)
 				this.addMessage(message);
+		} else {
+			this.addMessage("Room created");
 		}
 		//this.owner = owner;
 	}
