@@ -1,4 +1,4 @@
-var SERVER = "http://localhost:9998";
+var SERVER = "http://i32.tech/chat";
 
 function register(username, password, cb) {
 	var x = new XMLHttpRequest();
@@ -20,7 +20,19 @@ function login(username, password, cb) {
 	x.send();
 }
 
+function logout(username, password, cb) {
+	var x = new XMLHttpRequest();
+	x.open('GET', SERVER+"/logout");
+	x.setRequestHeader('username', username);
+	x.setRequestHeader('password', password);
+	x.onload = function() {
+		cb();
+	};
+	x.send();
+}
+
 function longPoll(auth, room, id, cb, cancel) {
+	console.log("request");
 	var x = new XMLHttpRequest();
 	cancel[0] = function() {
 		x.abort();
@@ -31,9 +43,17 @@ function longPoll(auth, room, id, cb, cancel) {
 	if (id)
 		x.setRequestHeader('id', id);
 	x.onload = function() {
+		console.log("response!");
 		var id = x.getResponseHeader('id');
-		var messages = JSON.parse(x.response);
-		cb(messages, id);
+		if (x.status != 200) {
+			alert("Error: "+x.response);
+		} else {
+			var messages = JSON.parse(x.response);
+			cb(messages, id);
+		}
+	}
+	x.ontimeout = function(){
+		console.log("TIMEOUT!");
 	}
 	x.send();
 }
