@@ -15,6 +15,14 @@ $send.onclick = function() {
 	});
 }
 
+$input.onkeypress = function(e) {
+	if (!e.shiftKey && e.keyCode == 13) {
+		e.preventDefault();
+		$send.onclick();
+		return;
+	}
+}
+
 $changeroom.onclick = function() {
 	cancel[0]();
 	$output.textContent = "";
