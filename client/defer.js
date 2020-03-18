@@ -1,12 +1,6 @@
 var auth;
 var user;
 var cancel = [function(){}];
-/*login("testuser2", "password", function(a) {
-	auth = a;
-	/*run(auth, "test", undefined, function(message) {
-		$output.textContent = message + "\n" + $output.textContent;
-	}, cancel);
-})*/
 
 function setAuth(a, u) {
 	auth = a;
@@ -14,19 +8,32 @@ function setAuth(a, u) {
 	if (a) {
 		$logged_out.setAttribute("hidden","hidden");
 		$logged_in.removeAttribute("hidden");
+		$logged_in_2.removeAttribute("hidden");
 		$myself.textContent = "logged in as "+user;
+		localStorage.auth = a;
+		localStorage.user = u;
 	} else {
 		$logged_in.setAttribute("hidden","hidden");
+		$logged_in_2.setAttribute("hidden","hidden");		
 		$logged_out.removeAttribute("hidden");
 		$myself.textContent = "not logged in";
+		delete localStorage.auth;
+		delete localStorage.user;
 	}
 }
 
-setAuth(null);
+if (localStorage.auth) {
+	setAuth(localStorage.auth, localStorage.user);
+} else {
+	setAuth(null);
+}
+changeRoom(null);
 
 $logout.onclick = function() {
-	logout(auth, error);
-	setAuth(null);
+	if (auth) {
+		logout(auth, error);
+		setAuth(null);
+	}
 }
 
 $login.onclick = function() {
@@ -39,14 +46,27 @@ $login.onclick = function() {
 	});
 }
 
-$send.onclick = function() {
-	sendMessage(auth, $room.value, $input.value, function(err){
-		if (err) {
-			error("Error sending message: "+err);
-		} else {
-			$input.value ="";
+$register.onclick = function() {
+	register($username.value, $password.value, function(err){
+		if (err)
+			error('Error registering: '+err);
+		else {
+			error('Registered');
+			$login.click()
 		}
 	});
+}
+
+$send.onclick = function() {
+	if ($input.value) {
+		sendMessage(auth, $room.value, $input.value, function(err){
+			if (err) {
+				error("Error sending message: "+err);
+			} else {
+				$input.value ="";
+			}
+		});
+	}
 }
 
 $input.onkeypress = function(e) {
@@ -57,10 +77,21 @@ $input.onkeypress = function(e) {
 	}
 }
 
-$changeroom.onclick = function() {
+function changeRoom(name) {
 	cancel[0]();
 	$output.textContent = "";
-	run(auth, $room.value, undefined, function(message) {
-		$output.textContent = message + "\n" + $output.textContent;
-	}, cancel);
+	if (name) {
+		$currentroom.textContent = "In room: "+name;
+		run(auth, name, undefined, function(message) {
+			$output.textContent = message + "\n" + $output.textContent;
+		}, cancel);
+		$send.disabled = false;
+	} else {
+		$currentroom.textContent = "Not in a room";
+		$send.disabled = true;
+	}
+}
+
+$changeroom.onclick = function() {
+	changeRoom($room.value);
 }

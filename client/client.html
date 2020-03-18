@@ -2,15 +2,21 @@
   <meta charset="utf-8">
   <script src="client.js"></script>
   <script defer src="defer.js"></script>
+  <style>
+  </style>
 </head>
 <body>
-  <span id="$myself"></span><button id="$logout">Log Out</button>
-  <hr>
-  <div id="$logged_out">
-	 <input id="$username" placeholder="username" name="username"><input id="$password" type="password" name="password" placeholder="password"><br><button id="$login">Log In</button><button id="$register" onclick="register($username.value, $password.value, function(err){if(err)error('Error registering: '+err);else{error('Registered');$login.click()}})">Register</button>
+  <div id="$logged_in_2">
+	 <span id="$myself"></span><button id="$logout">Log Out</button>
   </div>
+  <div id="$logged_out">
+	 <input id="$username" placeholder="username" name="username"><input id="$password" type="password" name="password" placeholder="password"><br><button id="$login">Log In</button><button id="$register">Register</button>
+  </div>
+  <hr>
   <div id="$logged_in" hidden>
-	 <input id="$room" value="test" placeholder="room name"><button id="$changeroom">Switch to room</button><br><hr>
+	 <input id="$room" value="test" placeholder="room name"><button id="$changeroom">Switch to room</button><br>
+	 <span id="$currentroom"></span>
+	 <hr>
 	 <textarea id="$input"></textarea><button id="$send">SEND</button><br>
 	 <pre id="$output"></pre>
   </div>
