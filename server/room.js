@@ -17,7 +17,9 @@ class Room { // <
 	}
 
 	logoutUser(user) {
-		var roomUser = this.getUser(user);
+		var roomUser = this.users[user];
+		if (!roomUser)
+			return;
 		// end all requests from that user
 		this.callbacks = this.callbacks.filter(callback => {
 			if (callback.user == user) {
