@@ -82,11 +82,11 @@ function sendMessage(auth, room, message, cb) {
 	return x;
 }
 
-function run(auth, room, id, display, cancel) {
+function run(auth, room, id, display, cancel, first) {
 	longPoll(auth, room, id, function(data, id) {
 		if (data.messages) {
 			for(var i=0;i<data.messages.length;i++){
-				display(data.messages[i]);
+				display(data.messages[i], first);
 			}
 		}
 		var t = setTimeout(function(){

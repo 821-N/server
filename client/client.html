@@ -3,21 +3,56 @@
   <script src="client.js"></script>
   <script defer src="defer.js"></script>
   <style>
+	 .stack {
+	 display: flex;
+	 flex-direction: column;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 background-color: red;
+	 }
+	 .loginpane {
+	 
+	 }
+	 .messagepane {
+	 width: 100%;
+	 flex-grow: 1;
+	 overflow-y: scroll;
+	 scroll-behavior: smooth;
+	 }
+	 .input {
+	 overflow-y: hidden;
+	 display: flex;
+	 flex-direction: row;
+	 }
+	 .input textarea {
+	 resize: vertical;
+	 height: 100%;
+	 margin: 0;
+	 flex-grow: 1;
+	 }
+	 .input button {
+	 height: 100%;
+	 display: block;
+	 }
   </style>
 </head>
 <body>
-  <div id="$logged_in_2">
-	 <span id="$myself"></span><button id="$logout">Log Out</button>
-  </div>
-  <div id="$logged_out">
-	 <input id="$username" placeholder="username" name="username"><input id="$password" type="password" name="password" placeholder="password"><br><button id="$login">Log In</button><button id="$register">Register</button>
+  <div class="stack">
+	 <div class="loginpane">
+		<input id="$username" placeholder="username" name="username"><input id="$password" type="password" name="password" placeholder="password"><br><button id="$login">Log In</button><button id="$register">Register</button>
+		<span id="$myself"></span><button id="$logout">Log Out</button>	
+	 </div>
+	 <div class="messagepane">
+		<input id="$room" value="test" placeholder="room name"><button id="$changeroom">Switch to room</button><br>
+		<span id="$currentroom"></span>
+		<pre id="$output"></pre>
+	 </div>
+	 <div class="input">
+		<textarea id="$input"></textarea><button id="$send">SEND</button>
+	 </div>
   </div>
   <hr>
-  <div id="$logged_in" hidden>
-	 <input id="$room" value="test" placeholder="room name"><button id="$changeroom">Switch to room</button><br>
-	 <span id="$currentroom"></span>
-	 <hr>
-	 <textarea id="$input"></textarea><button id="$send">SEND</button><br>
-	 <pre id="$output"></pre>
-  </div>
 </body>

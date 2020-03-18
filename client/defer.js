@@ -6,16 +6,10 @@ function setAuth(a, u) {
 	auth = a;
 	user = u;
 	if (a) {
-		$logged_out.setAttribute("hidden","hidden");
-		$logged_in.removeAttribute("hidden");
-		$logged_in_2.removeAttribute("hidden");
 		$myself.textContent = "logged in as "+user;
 		localStorage.auth = a;
 		localStorage.user = u;
 	} else {
-		$logged_in.setAttribute("hidden","hidden");
-		$logged_in_2.setAttribute("hidden","hidden");		
-		$logged_out.removeAttribute("hidden");
 		$myself.textContent = "not logged in";
 		delete localStorage.auth;
 		delete localStorage.user;
@@ -77,14 +71,27 @@ $input.onkeypress = function(e) {
 	}
 }
 
+function shouldScroll(element) {
+	return (element.scrollHeight - element.scrollTop - element.clientHeight <= element.clientHeight*.25);
+}
+
+function autoScroll(element, force) {
+	element.scrollTop = element.scrollHeight - element.clientHeight;
+}
+
+function displayMessage(message, first) {
+	var s = shouldScroll($output);
+	$output.textContent = $output.textContent + "\n" + message;
+	if (s || first)
+		autoScroll($output);
+}
+
 function changeRoom(name) {
 	cancel[0]();
 	$output.textContent = "";
 	if (name) {
 		$currentroom.textContent = "In room: "+name;
-		run(auth, name, undefined, function(message) {
-			$output.textContent = message + "\n" + $output.textContent;
-		}, cancel);
+		run(auth, name, undefined, displayMessage, cancel, true);
 		$send.disabled = false;
 	} else {
 		$currentroom.textContent = "Not in a room";
