@@ -119,10 +119,10 @@ class Room { // <
 		this.nextId++;
 		
 		// clear old messages
-		if (this.nextId-RECENTS-1 >= 0) {
+		/*if (this.nextId-RECENTS-1 >= 0) {
 			delete this.messages[this.nextId-RECENTS-1];
 			this.oldest = this.nextId-RECENTS;
-		}
+		}*/
 	}
 	
 	log(message) {
@@ -153,8 +153,8 @@ class Room { // <
 	}
 
 	// get a list of all messages with ids >= id
-	fromId(id = 0) {
-		if (id < this.oldest)
+	fromId(id = 0, force) {
+		if (id < this.oldest && !force)
 			id = this.oldest;
 		
 		// if id is after newest message, it won't respond immediately
@@ -174,7 +174,7 @@ class Room { // <
 
 	save() {
 		return {
-			messages: this.fromId(),
+			messages: this.fromId(0, true),
 			//users: 
 		};
 	}
