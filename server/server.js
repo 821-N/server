@@ -11,7 +11,7 @@ class Server {
 			res.header("Access-Control-Allow-Origin", "*");
 			res.header("Access-Control-Allow-Headers", "*");
 			res.header("Access-Control-Expose-Headers", "*");
-			console.log(res.header("Content-Type"));
+			console.log(res.get("Content-Type"));
 			next();
 		});
 		app.use(BodyParser.text({type: "text/*"}));
