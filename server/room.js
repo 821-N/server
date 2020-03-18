@@ -71,8 +71,8 @@ class Room { // <
 		var roomUser = this.getUser(callback.user);
 		this.callbacks = this.callbacks.filter(cb => {
 			if (cb === callback) {
-				return false;
 				roomUser.connections--;
+				return false;
 			} else
 				return true;
 		});
