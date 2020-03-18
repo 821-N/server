@@ -11,6 +11,8 @@ $send.onclick = function() {
 	sendMessage(auth, $room.value, $input.value, function(err){
 		if (err) {
 			error("Error sending message: "+err);
+		} else {
+			$input.value ="";
 		}
 	});
 }
