@@ -58,7 +58,6 @@ $register.onclick = function() {
 
 $send.onclick = function() {
 	if ($input.value) {
-		alert($input.value);
 		sendMessage(auth, $room.value, $input.value, function(err){
 			if (err) {
 				error("Error sending message: "+err);

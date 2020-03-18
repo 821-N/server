@@ -72,6 +72,7 @@ function sendMessage(auth, room, message, cb) {
 	var x = new XMLHttpRequest();
 	x.open('POST', SERVER+"/?room="+encodeURIComponent(room));
 	x.setRequestHeader('auth', auth);
+	x.setRequestHeader('Content-Type', "text/plain");
 	x.onload = function(){
 		if (x.status != 200)
 			cb(x.response);
