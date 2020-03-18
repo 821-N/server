@@ -6,10 +6,14 @@ function setAuth(a, u) {
 	auth = a;
 	user = u;
 	if (a) {
+		$logged_out.setAttribute("hidden","hidden");
+		$logged_in.removeAttribute("hidden");
 		$myself.textContent = "logged in as "+user;
 		localStorage.auth = a;
 		localStorage.user = u;
 	} else {
+		$logged_in.setAttribute("hidden","hidden");
+		$logged_out.removeAttribute("hidden");		
 		$myself.textContent = "not logged in";
 		delete localStorage.auth;
 		delete localStorage.user;
@@ -27,6 +31,7 @@ $logout.onclick = function() {
 	if (auth) {
 		logout(auth, error);
 		setAuth(null);
+		changeRoom(null);
 	}
 }
 
@@ -80,10 +85,12 @@ function autoScroll(element, force) {
 }
 
 function displayMessage(message, first) {
-	var s = shouldScroll($output);
-	$output.textContent = $output.textContent + "\n" + message;
+	var elem = document.createElement("div");
+	elem.textContent = message;
+	var s = shouldScroll($output.parentElement);
+	$output.appendChild(elem);
 	if (s || first)
-		autoScroll($output);
+		autoScroll($output.parentElement);
 }
 
 function changeRoom(name) {
