@@ -194,29 +194,45 @@ class Server {
 			res.send("missing password header");
 			return [null, null];
 		}
-		if (this.accounts[username] === undefined) {
-			if (create) {
-				this.accounts[username] = password;
-			} else {
-				res.status(400);
-				res.send("account doesn't exist");
-				return [null, null];
-			}
-		} else {
-			if (create) {
+		if (create) {
+			if (this.accounts[username] !== undefined) {
 				res.status(400);
 				res.send("account already exists");
 				return [null, null];
 			}
-		}
-		if (this.accounts[username] !== password) {
-			res.status(400);
-			res.send("Incorrect password");
-			return [null, null];
+			var problems = this.checkPassword(password);
+			if (problems !== true) {
+				res.status(400);
+				res.send("Invalid password: "+problems);
+				return [null, null];
+			}
+			this.accounts[username] = password;
+		} else {
+			if (this.accounts[username] === undefined) {
+				res.status(400);
+				res.send("account doesn't exist");
+				return [null, null];
+			}
+			if (this.accounts[username] !== password) {
+				res.status(400);
+				res.send("Incorrect password");
+				return [null, null];
+			}
 		}
 		return [username, password];
 	}
 
+	// password requirements
+	checkPassword(password) {
+		if (typeof password !== 'string') {
+			return "internal error 15";
+		}
+		if (password.length < 4) {
+			return "password too short";
+		}
+		return true;
+	}
+	
 	save(cb) {
 		console.log("saving to file");
 		var rooms = {};
