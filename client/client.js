@@ -83,9 +83,11 @@ function sendMessage(auth, room, message, cb) {
 }
 
 function run(auth, room, id, display, cancel) {
-	longPoll(auth, room, id, function(messages, id) {
-		for(var i=0;i<messages.length;i++){
-			display(messages[i]);
+	longPoll(auth, room, id, function(data, id) {
+		if (data.messages) {
+			for(var i=0;i<data.messages.length;i++){
+				display(data.messages[i]);
+			}
 		}
 		var t = setTimeout(function(){
 			run(auth, room, id, display, cancel)

@@ -45,7 +45,7 @@ class Server {
 				if (closed)
 					return;
 				res.set('id', id);
-				res.json(messages);
+				res.json({messages: messages}); //BREAKING CHANGEx
 				req.removeListener('close', dc);
 			}
 			dc = () => {
