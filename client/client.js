@@ -5,7 +5,12 @@ function register(username, password, cb) {
 	x.open('POST', SERVER+"/register");
 	x.setRequestHeader('username', username);
 	x.setRequestHeader('password', password);
-	x.onload = cb;
+	x.onload = function() {
+		if (x.status==200)
+			cb();
+		else
+			cb(x.response);
+	};
 	x.send();
 }
 
@@ -15,18 +20,23 @@ function login(username, password, cb) {
 	x.setRequestHeader('username', username);
 	x.setRequestHeader('password', password);
 	x.onload = function() {
-		cb(x.response);
+		if (x.status==200)
+			cb(x.response);
+		else
+			cb(null, x.response);
 	};
 	x.send();
 }
 
-function logout(username, password, cb) {
+function logout(auth, cb) {
 	var x = new XMLHttpRequest();
 	x.open('GET', SERVER+"/logout");
-	x.setRequestHeader('username', username);
-	x.setRequestHeader('password', password);
+	x.setRequestHeader('auth', auth);
 	x.onload = function() {
-		cb();
+		if (x.status==200)
+			cb();
+		else
+			cb(x.response);
 	};
 	x.send();
 }
@@ -46,14 +56,14 @@ function longPoll(auth, room, id, cb, cancel) {
 		console.log("response!");
 		var id = x.getResponseHeader('id');
 		if (x.status != 200) {
-			alert("Error: "+x.response);
+			error("Error getting messages: "+x.response);
 		} else {
 			var messages = JSON.parse(x.response);
 			cb(messages, id);
 		}
 	}
 	x.ontimeout = function(){
-		console.log("TIMEOUT!");
+		error("timeout!");
 	}
 	x.send();
 }
@@ -62,7 +72,12 @@ function sendMessage(auth, room, message, cb) {
 	var x = new XMLHttpRequest();
 	x.open('POST', SERVER+"/?room="+encodeURIComponent(room));
 	x.setRequestHeader('auth', auth);
-	x.onload = cb;
+	x.onload = function(){
+		if (x.status != 200)
+			cb(x.response);
+		else
+			cb();
+	}
 	x.send(message);
 	return x;
 }
@@ -81,3 +96,7 @@ function run(auth, room, id, display, cancel) {
 	}, cancel);
 }
 
+function error(message) {
+	if (message)
+		alert(message);
+}

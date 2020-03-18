@@ -1,9 +1,13 @@
-<meta charset="utf-8">
-<script src="setImmediate.js"></script>
-<script src="client.js"></script>
-<script defer src="defer.js"></script>
-<textarea id="$room">test</textarea><button id="$changeroom">GOTO</button><br>
-
-<textarea id="$input"></textarea><button id="$send">SEND</button><br>
-<pre id="$output"></pre>
-
+<head>
+  <meta charset="utf-8">
+  <script src="client.js"></script>
+  <script defer src="defer.js"></script>
+</head>
+<body>
+  <input id="$username" placeholder="username" name="username"><input id="$password" type="password" name="password" placeholder="password"><br><button id="$login" onclick="login($username.value, $password.value, function(a, err){if(a){auth=a;error('Logged in')}else{error('Error logging in: '+err)}})">Log In</button><button id="$register" onclick="register($username.value, $password.value, function(err){if(err)error('Error registering: '+err);else{error('Registered');$login.click()}})">Register</button><button id="$logout" onclick="logout(auth, error)">Log Out</button><br>
+  
+  <hr>
+  <input id="$room" value="test" placeholder="room name"><button id="$changeroom">Switch to room</button><br><hr>
+  <textarea id="$input"></textarea><button id="$send">SEND</button><br>
+  <pre id="$output"></pre>
+</body>

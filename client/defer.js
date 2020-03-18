@@ -1,14 +1,18 @@
 var auth;
 var cancel = [function(){}];
-login("testuser2", "password", function(a) {
+/*login("testuser2", "password", function(a) {
 	auth = a;
 	/*run(auth, "test", undefined, function(message) {
 		$output.textContent = message + "\n" + $output.textContent;
-	}, cancel);*/
-})
+	}, cancel);
+})*/
 
 $send.onclick = function() {
-	sendMessage(auth, $room.value, $input.value);
+	sendMessage(auth, $room.value, $input.value, function(err){
+		if (err) {
+			error("Error sending message: "+err);
+		}
+	});
 }
 
 $changeroom.onclick = function() {
