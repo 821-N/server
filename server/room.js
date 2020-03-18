@@ -68,6 +68,7 @@ class Room { // <
 	}
 
 	onConnectionClose(callback) {
+		var roomUser = this.getUser(callback.user);
 		this.callbacks = this.callbacks.filter(cb => {
 			if (cb === callback) {
 				return false;
@@ -75,7 +76,6 @@ class Room { // <
 			} else
 				return true;
 		});
-		var roomUser = this.getUser(callback.user);
 		this.log(" User "+callback.user+" closed connection ("+roomUser.connections+")");
 		if (roomUser.dcTimeout === undefined && !roomUser.connections)
 			this.userOnline(callback.user, false);
