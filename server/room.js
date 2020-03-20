@@ -43,7 +43,7 @@ class Room { // <
 				connections: 0,
 				online: false,
 			};
-			this.post("User "+user+" joined room for the first time");
+			//this.post("User "+user+" joined room for the first time");
 		}
 		return r;
 	}
@@ -83,10 +83,15 @@ class Room { // <
 
 	// set the online status of a user
 	userOnline(user, state) {
+		var first = state && !this.users[user]
+			
 		var roomUser = this.getUser(user);
 		if (roomUser.online != state) {
 			roomUser.online = state;
-			this.post(user + " " + (state ? "joined" : "left"));
+			if (first) {
+				this.post(user + " joined for the first time");
+			} else
+				this.post(user + " " + (state ? "joined" : "left"));
 		}
 	}
 	
