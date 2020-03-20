@@ -29,7 +29,13 @@ changeRoom(null);
 
 $logout.onclick = function() {
 	if (auth) {
-		logout(auth, error);
+		logout(auth, error, function(e) {
+			if (e) {
+				error("Error while logging out: "+e);
+			} else {
+				error("Logged out");
+			}
+		});
 		setAuth(null);
 		changeRoom(null);
 	}
@@ -39,6 +45,7 @@ $login.onclick = function() {
 	login($username.value, $password.value, function(a, err){
 		if(a){
 			setAuth(a, $username.value);
+			error('Logged in');
 		}else{
 			error('Error logging in: '+err);
 		}
@@ -101,6 +108,8 @@ function displayMessage(message, first) {
 		elem.className = "systemMessage";
 		elem.textContent = text;
 	}
+	if (message.type == "error")
+		elem.className += " errorMessage";
 	var s = shouldScroll($output.parentElement);
 	$output.appendChild(elem);
 	if (s || first)
@@ -111,6 +120,7 @@ function changeRoom(name) {
 	cancel[0]();
 	$output.textContent = "";
 	if (name) {
+		error("Joining room "+name);
 		$currentroom.textContent = "Current room: "+name;
 		run(auth, name, undefined, displayMessage, cancel, true);
 		$send.disabled = false;
@@ -125,5 +135,5 @@ $changeroom.onclick = function() {
 }
 
 function error(message) {
-	displayMessage({message:message});
+	displayMessage({message:message, type:'error'}, true);
 }
