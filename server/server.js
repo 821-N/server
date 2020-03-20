@@ -4,6 +4,11 @@ const Room = require('./room.js');
 const User = require('./user.js');
 const Fs = require('fs');
 
+//var KEYS = require('./keys.js');
+// idea: every request contains a key
+// that selects which database it reads from
+
+
 class Server {
 	constructor(port, file) {
 		var app = Express();
@@ -149,6 +154,8 @@ class Server {
 
 	getRequestRoom(req) {
 		var room = req.query.room;
+//		var key = req.query.key;
+//		if (key == '
 		if (room == undefined)
 			return [null, 400, "Missing room query parameter"];
 		var room = this.getRoom(room);

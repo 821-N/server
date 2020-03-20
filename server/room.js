@@ -99,9 +99,10 @@ class Room { // <
 			var roomUser = this.getUser(user);
 			if (!roomUser.online)
 				return false;
-			message = user + ": " + message;
+			this.addMessage({message:message, user:user});
+		} else {
+			this.addMessage({message:message});
 		}
-		this.addMessage(message);
 		this.log("Message: "+message);
 		// send message to clients
 		this.callbacks = this.callbacks.filter(callback => {
