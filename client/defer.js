@@ -8,13 +8,13 @@ function setAuth(a, u) {
 	if (a) {
 		$logged_out.setAttribute("hidden","hidden");
 		$logged_in.removeAttribute("hidden");
-		$myself.textContent = "logged in as "+user;
+		$myself.textContent = "Logged in as "+user;
 		localStorage.auth = a;
 		localStorage.user = u;
 	} else {
 		$logged_in.setAttribute("hidden","hidden");
 		$logged_out.removeAttribute("hidden");		
-		$myself.textContent = "not logged in";
+		$myself.textContent = "Not logged in";
 		delete localStorage.auth;
 		delete localStorage.user;
 	}

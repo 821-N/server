@@ -1,0 +1,119 @@
+<head>
+  <meta charset="utf-8">
+  <script src="client.js"></script>
+  <script defer src="defer.js"></script>
+  <style>
+	 body {
+	 background-color: red;
+	 font-family:sans-serif;
+	 }
+	 * {
+	 margin: 0;
+	 }
+	 .stack {
+	 display: flex;
+	 flex-direction: column;
+	 position: absolute;
+	 top: 0;
+	 left: 0;
+	 right: 0;
+	 bottom: 0;
+	 background-color: white;
+	 padding: 0.5em;
+	 }
+	 .stack > * {
+	 margin: 0.25em;
+	 }
+	 .loginpane {
+	 
+	 }
+	 .messagepane {
+	 width: 100%;
+	 flex-grow: 1;
+	 flex-shrink: 1;
+	 flex-basis: 30vh;
+	 scroll-behavior: smooth;
+	 overflow-y: scroll;
+	 background-color: #EEEEEE;
+	 }
+	 .roompane {
+	 
+	 }
+	 .input {
+	 display: flex;
+	 flex-direction: row;
+	 height: 3.5rem;
+	 }
+	 .input textarea {
+	 resize: none;
+	 /*max-height: 100%;*/
+	 flex-grow: 1;
+	 margin: 0;
+	 display: inline-block;
+	 }
+	 .input button {
+	 height: 100%;
+	 display: inline-block;
+	 }
+	 .messagepane > div {
+	 padding-bottom: 0.5rem;
+	 padding-top: 100%;
+	 }
+	 .messagepane > div > div {
+	 white-space: pre-wrap;
+	 word-break: break-all;
+	 padding-left: 1rem;
+	 padding-bottom: 0.25rem;
+	 font-size: 1em;
+	 }
+	 .userlistpane {
+	 
+	 }
+	 .sender {
+	 font-weight: bold;
+	 }
+	 .sender::after {
+	 content: ": ";
+	 }
+	 .systemMessage {
+	 color: #222233;
+	 background-color: #DDEEDD;
+	 }
+	 [id="$currentroom"] {
+	 margin-right: 1em;
+	 }
+  </style>
+</head>
+<body>
+  <div class="stack">
+	 <div class="loginpane">
+		<div id="$logged_out">
+		  Not logged in
+		  <input id="$username" placeholder="username" name="username">
+		  <input id="$password" type="password" name="password" placeholder="password">
+		  <button id="$login">Log In</button>
+		  <button id="$register">Register</button><br>
+		  (Warning: this is not secure yet so don't use an important password here)
+		</div>
+		<div id="$logged_in">
+		  <span id="$myself"></span><button id="$logout">Log Out</button>
+		</div>
+	 </div>
+
+	 <div class="messagepane">
+		<div class="messagelist" id="$output">
+		</div>
+	 </div>
+	 <div class="roompane">
+		<span id="$currentroom"></span><input id="$room" value="test" placeholder="room name"><button id="$changeroom">Join room</button>
+	 </div>
+	 <div class="input">
+		<textarea id="$input"></textarea><button id="$send">SEND</button>
+	 </div>
+	 <div class="userlistpane">
+		
+	 </div>
+
+  </div>
+  <hr>
+</body>
