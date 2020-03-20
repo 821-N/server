@@ -22,15 +22,6 @@ body {
 .loginpane {
 	
 }
-.messagepane {
-	width: 100%;
-	flex-grow: 1;
-	flex-shrink: 1;
-	flex-basis: 30vh;
-	scroll-behavior: smooth;
-	overflow-y: scroll;
-	background-color: #EEEEEE;
-}
 .roompane {
 	
 }
@@ -45,20 +36,36 @@ body {
 	flex-grow: 1;
 	margin: 0;
 	display: inline-block;
+	margin-right: 0.5em;
 }
 .input button {
 	height: 100%;
 	display: inline-block;
 }
-.messagepane > div {
-	padding-bottom: 0.5rem;
-	padding-top: 100%;
+.messagepane {
+	width: 100%;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 30vh;
+	scroll-behavior: smooth;
+	overflow-y: scroll;
+	background-color: #EEEEEE;
+	display: flex;
+	flex-direction: column;
 }
-.messagepane > div > div {
+.messagelist {
+	padding-bottom: 0.5rem;
+	padding-top: 0.5rem;
+}
+.spacer {
+	flex-grow: 1;
+}
+.messagelist > div {
 	white-space: pre-wrap;
 	word-break: break-all;
 	padding-left: 1rem;
-	padding-bottom: 0.25rem;
+	padding-bottom: 0.1rem;
+	padding-top: 0.2rem;
 	font-size: 1em;
 }
 .userlistpane {
