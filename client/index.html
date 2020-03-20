@@ -1,39 +1,39 @@
 <head>
-  <meta charset="utf-8">
-  <script src="client.js"></script>
-  <script defer src="defer.js"></script>
-  <link rel="stylesheet" href="main.css">
+	<meta charset="utf-8">
+	<script src="client.js"></script>
+	<script defer src="defer.js"></script>
+	<link rel="stylesheet" href="main.css">
 </head>
 <body>
-  <div class="stack">
-	 <div class="loginpane">
-		<div id="$logged_out">
-		  Not logged in
-		  <input id="$username" placeholder="username" name="username">
-		  <input id="$password" type="password" name="password" placeholder="password">
-		  <button id="$login">Log In</button>
-		  <button id="$register">Register</button><br>
-		  (Warning: this is not secure yet so don't use an important password here)
+	<div class="stack">
+		<div class="loginpane">
+			<div id="$logged_out">
+				Not logged in
+				<input id="$username" placeholder="username" name="username">
+				<input id="$password" type="password" name="password" placeholder="password">
+				<button id="$login">Log In</button>
+				<button id="$register">Register</button><br>
+				(Warning: this is not secure yet so don't use an important password here)
+			</div>
+			<div id="$logged_in">
+				Logged in as: <span id="$myself"></span><button id="$logout">Log Out</button>
+			</div>
 		</div>
-		<div id="$logged_in">
-		  Logged in as: <span id="$myself"></span><button id="$logout">Log Out</button>
-		</div>
-	 </div>
 
-	 <div class="messagepane">
-		<div class="messagelist" id="$output">
+		<div class="messagepane">
+			<div class="messagelist" id="$output">
+			</div>
 		</div>
-	 </div>
-	 <div class="roompane">
-		<button id="$changeroom">Join room</button><input id="$room" value="test" placeholder="room name"><span id="$currentroom"></span>
-	 </div>
-	 <div class="input">
-		<textarea id="$input"></textarea><button id="$send">SEND</button>
-	 </div>
-	 <div class="userlistpane">
-		
-	 </div>
+		<div class="roompane">
+			<button id="$changeroom">Join room</button><input id="$room" value="test" placeholder="room name"><span id="$currentroom"></span>
+		</div>
+		<div class="input">
+			<textarea id="$input"></textarea><button id="$send">SEND</button>
+		</div>
+		<div class="userlistpane">
+			
+		</div>
 
-  </div>
-  <hr>
+	</div>
+	<hr>
 </body>
