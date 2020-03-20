@@ -9,19 +9,19 @@ function setAuth(a, u) {
 		$logged_out.setAttribute("hidden","hidden");
 		$logged_in.removeAttribute("hidden");
 		$myself.textContent = user;
-		localStorage.auth = a;
+		localStorage.auth2 = a;
 		localStorage.user = u;
 	} else {
 		$logged_in.setAttribute("hidden","hidden");
 		$logged_out.removeAttribute("hidden");		
 		$myself.textContent = "";
-		delete localStorage.auth;
+		delete localStorage.auth2;
 		delete localStorage.user;
 	}
 }
 
-if (localStorage.auth) {
-	setAuth(localStorage.auth, localStorage.user);
+if (localStorage.auth2) {
+	setAuth(localStorage.auth2, localStorage.user);
 } else {
 	setAuth(null);
 }
