@@ -8,13 +8,13 @@ function setAuth(a, u) {
 	if (a) {
 		$logged_out.setAttribute("hidden","hidden");
 		$logged_in.removeAttribute("hidden");
-		$myself.textContent = "Logged in as "+user;
+		$myself.textContent = user;
 		localStorage.auth = a;
 		localStorage.user = u;
 	} else {
 		$logged_in.setAttribute("hidden","hidden");
 		$logged_out.removeAttribute("hidden");		
-		$myself.textContent = "Not logged in";
+		$myself.textContent = "";
 		delete localStorage.auth;
 		delete localStorage.user;
 	}
@@ -120,7 +120,7 @@ function changeRoom(name) {
 	cancel[0]();
 	$output.textContent = "";
 	if (name) {
-		error("Joining room "+name);
+		error("Joining room "+name+"...");
 		$currentroom.textContent = "Current room: "+name;
 		run(auth, name, undefined, displayMessage, cancel, true);
 		$send.disabled = false;
