@@ -11,6 +11,9 @@ function register(username, password, cb) {
 		else
 			cb(x.response);
 	};
+	x.onerror = function() {
+		cb("Server is down");
+	}
 	x.send();
 }
 
@@ -25,6 +28,9 @@ function login(username, password, cb) {
 		else
 			cb(null, x.response);
 	};
+	x.onerror = function() {
+		cb(null, "Server is down");
+	}
 	x.send();
 }
 
@@ -38,6 +44,9 @@ function logout(auth, cb) {
 		else
 			cb(x.response);
 	};
+	x.onerror = function() {
+		cb("Server is down");
+	}
 	x.send();
 }
 
@@ -56,14 +65,21 @@ function longPoll(auth, room, id, cb, cancel) {
 		console.log("response!");
 		var id = x.getResponseHeader('id');
 		if (x.status != 200) {
-			error("Error getting messages: "+x.response);
+			if (x.status == 403) {
+				error("Session expired, please log in again");
+			} else {
+				error("Error getting messages: "+x.response);
+			}
 		} else {
 			var messages = JSON.parse(x.response);
 			cb(messages, id);
 		}
 	}
+	x.onerror = function() {
+		error("Server is down");
+	}
 	x.ontimeout = function(){
-		error("timeout!");
+		error("Connection timeout!");
 	}
 	x.send();
 }
@@ -78,6 +94,9 @@ function sendMessage(auth, room, message, cb) {
 			cb(x.response);
 		else
 			cb();
+	}
+	x.onerror = function() {
+		cb("Server is down");
 	}
 	x.send(message);
 	return x;
