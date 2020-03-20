@@ -8,7 +8,9 @@ function register(username, password, cb) {
 	x.onload = function() {
 		if (x.status==200)
 			cb();
-		else
+		else if (x.status == 502) {
+			error("Server is down");
+		} else
 			cb(x.response);
 	};
 	x.onerror = function() {
@@ -25,7 +27,9 @@ function login(username, password, cb) {
 	x.onload = function() {
 		if (x.status==200)
 			cb(x.response);
-		else
+		else if (x.status == 502) {
+			error("Server is down");
+		} else
 			cb(null, x.response);
 	};
 	x.onerror = function() {
@@ -41,7 +45,9 @@ function logout(auth, cb) {
 	x.onload = function() {
 		if (x.status==200)
 			cb();
-		else
+		else if (x.status == 502) {
+			error("Server is down");
+		} else
 			cb(x.response);
 	};
 	x.onerror = function() {
@@ -67,6 +73,8 @@ function longPoll(auth, room, id, cb, cancel) {
 		if (x.status != 200) {
 			if (x.status == 403) {
 				error("Session expired, please log in again");
+			} else if (x.status == 502) {
+				error("Server is down");
 			} else {
 				error("Error getting messages: "+x.response);
 			}
@@ -92,7 +100,9 @@ function sendMessage(auth, room, message, cb) {
 	x.onload = function(){
 		if (x.status != 200)
 			cb(x.response);
-		else
+		else if (x.status == 502) {
+			error("Server is down");
+		} else
 			cb();
 	}
 	x.onerror = function() {
