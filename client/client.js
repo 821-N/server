@@ -99,7 +99,7 @@ function run(auth, room, id, display, cancel, first) {
 	}, cancel);
 }
 
-function error(message) {
+/*function error(message) {
 	if (message)
 		alert(message);
-}
+}*/

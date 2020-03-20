@@ -85,8 +85,22 @@ function autoScroll(element, force) {
 }
 
 function displayMessage(message, first) {
+	console.log("displaying:",message);
 	var elem = document.createElement("div");
-	elem.textContent = message;
+	var user = message.user;
+	var text = message.message;
+	if (user) {
+		var s = document.createElement("span");
+		s.className = "sender";
+		s.textContent = user;
+		elem.appendChild(s);
+		s = document.createTextNode(text);
+		elem.appendChild(s);
+		elem.className = "message";
+	} else {
+		elem.className = "systemMessage";
+		elem.textContent = text;
+	}
 	var s = shouldScroll($output.parentElement);
 	$output.appendChild(elem);
 	if (s || first)
@@ -97,15 +111,19 @@ function changeRoom(name) {
 	cancel[0]();
 	$output.textContent = "";
 	if (name) {
-		$currentroom.textContent = "In room: "+name;
+		$currentroom.textContent = "Current room: "+name;
 		run(auth, name, undefined, displayMessage, cancel, true);
 		$send.disabled = false;
 	} else {
-		$currentroom.textContent = "Not in a room";
+		$currentroom.textContent = "Not connected";
 		$send.disabled = true;
 	}
 }
 
 $changeroom.onclick = function() {
 	changeRoom($room.value);
+}
+
+function error(message) {
+	displayMessage({message:message});
 }
